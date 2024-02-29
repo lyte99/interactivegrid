@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Grid</title>
+    <style>
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        #minefield {
+            display: grid;
+            grid-template-columns: repeat(10, 30px); /* Adjust based on the size of the board */
+            gap: 1px;
+        }
+
+        .minefield-cell {
+            width: 30px;
+            height: 30px;
+            background-color: #cccccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #666;
+            cursor: pointer;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .minefield-cell.clicked {
+            background-color: #a0a0a0; /* Change this color to whatever you like */
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="minefield"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', startGame);
+
+        function startGame() {
+            const minefield = document.getElementById('minefield');
+            const size = 10; // 10x10 grid
+            createBoard();
+
+            function createBoard() {
+                for (let i = 0; i < size * size; i++) {
+                    const cell = document.createElement('div');
+                    cell.setAttribute('id', 'cell-' + i);
+                    cell.classList.add('minefield-cell');
+                    minefield.appendChild(cell);
+                    cell.addEventListener('click', function() {
+                        updateCell(cell);
+                    });
+                }
+            }
+
+            function updateCell(cell) {
+                const symbols = ['H', 'T', 'B', 'C', '@', '$', '%'];
+                let currentSymbol = cell.textContent || '';
+                let nextIndex = symbols.indexOf(currentSymbol) + 1;
+
+                cell.classList.add('clicked'); // Change the color on click
+                cell.textContent = symbols[nextIndex % symbols.length]; // Cycle through symbols
+            }
+        }
+    </script>
+</body>
+</html>
