@@ -3,72 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Grid</title>
+    <title>Interactive Underground Mine Grid</title>
     <style>
-        #gameContainer {
+        body {
+            background-color: #3e3e3e; /* Dark background for an underground mine effect */
+            color: #dcdcdc; /* Dusty text color for contrast */
+            font-family: 'Courier New', monospace; /* Monospace to mimic mining symbols */
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-top: 20px;
+            height: 100vh;
         }
 
         #minefield {
             display: grid;
-            grid-template-columns: repeat(10, 30px); /* Adjust based on the size of the board */
-            gap: 1px;
+            grid-template-columns: repeat(10, 40px); /* Larger cells for better visibility */
+            gap: 4px; /* Spacing to represent the separation between mine blocks */
         }
 
         .minefield-cell {
-            width: 30px;
-            height: 30px;
-            background-color: #cccccc;
+            width: 40px; /* Larger cell size */
+            height: 40px; /* Match cell width for square cells */
+            background-color: #6b6b6b; /* Grey color representing rocks */
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid #666;
             cursor: pointer;
-            font-weight: bold;
-            user-select: none;
+            border-radius: 5px; /* Rounded corners for a more natural rock look */
+            transition: background-color 0.3s; /* Smooth transition for cell background color */
         }
 
         .minefield-cell.clicked {
-            background-color: #a0a0a0; /* Change this color to whatever you like */
+            background-color: #9c9c9c; /* Lighter color to represent excavated areas */
+            color: #000; /* Black color for symbols to enhance visibility */
         }
     </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <div id="minefield"></div>
-    </div>
+    <div id="minefield"></div>
     <script>
-        document.addEventListener('DOMContentLoaded', startGame);
-
-        function startGame() {
+        document.addEventListener('DOMContentLoaded', () => {
             const minefield = document.getElementById('minefield');
-            const size = 10; // 10x10 grid
-            createBoard();
+            const size = 10; // Define grid size
+            const symbols = ['H', 'T', 'B', 'C', '@', '$', '%']; // Symbols representing mining findings
 
-            function createBoard() {
-                for (let i = 0; i < size * size; i++) {
-                    const cell = document.createElement('div');
-                    cell.setAttribute('id', 'cell-' + i);
-                    cell.classList.add('minefield-cell');
-                    minefield.appendChild(cell);
-                    cell.addEventListener('click', function() {
-                        updateCell(cell);
-                    });
-                }
+            for (let i = 0; i < size * size; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'minefield-cell';
+                cell.dataset.symbolIndex = '0'; // Default symbol index
+                cell.addEventListener('click', () => {
+                    const index = (parseInt(cell.dataset.symbolIndex) + 1) % symbols.length;
+                    cell.dataset.symbolIndex = index.toString();
+                    cell.textContent = symbols[index];
+                    cell.classList.add('clicked');
+                });
+                minefield.appendChild(cell);
             }
-
-            function updateCell(cell) {
-                const symbols = ['H', 'T', 'B', 'C', '@', '$', '%'];
-                let currentSymbol = cell.textContent || '';
-                let nextIndex = symbols.indexOf(currentSymbol) + 1;
-
-                cell.classList.add('clicked'); // Change the color on click
-                cell.textContent = symbols[nextIndex % symbols.length]; // Cycle through symbols
-            }
-        }
+        });
     </script>
 </body>
 </html>
