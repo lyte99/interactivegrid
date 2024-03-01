@@ -47,17 +47,21 @@
         document.addEventListener('DOMContentLoaded', () => {
             const minefield = document.getElementById('minefield');
             const size = 10; // Define grid size
-            const symbols = ['H', 'T', 'B', 'C', '@', '$', '%']; // Symbols representing mining findings
+            const symbols = ['', 'H', 'T', 'B', 'C','D', '@', '$', '%']; // Symbols array includes blank for initial state
 
             for (let i = 0; i < size * size; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'minefield-cell';
-                cell.dataset.symbolIndex = '0'; // Default symbol index
+                cell.dataset.symbolIndex = '0'; // Initialize with the blank state
                 cell.addEventListener('click', () => {
-                    const index = (parseInt(cell.dataset.symbolIndex) + 1) % symbols.length;
+                    let index = (parseInt(cell.dataset.symbolIndex) + 1) % symbols.length;
                     cell.dataset.symbolIndex = index.toString();
                     cell.textContent = symbols[index];
-                    cell.classList.add('clicked');
+                    if (index === 0) {
+                        cell.classList.remove('clicked');
+                    } else {
+                        cell.classList.add('clicked');
+                    }
                 });
                 minefield.appendChild(cell);
             }
